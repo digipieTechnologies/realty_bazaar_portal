@@ -1,0 +1,36 @@
+// File: lib/app/app_constants.dart
+// Purpose: Global constant variables for dimensions, settings, and storage.
+
+class AppConstants {
+  AppConstants._();
+
+  // Layout Dimensions (Paddings, Margins, Spacings)
+  static const double paddingXS = 4.0;
+  static const double paddingS = 8.0;
+  static const double paddingM = 16.0;
+  static const double paddingL = 24.0;
+  static const double paddingXL = 32.0;
+
+  static const double borderRadiusS = 4.0;
+  static const double borderRadiusM = 8.0;
+  static const double borderRadiusL = 12.0;
+  static const double borderRadiusXL = 24.0;
+
+  // Animation Speeds
+  static const int durationFastMs = 150;
+  static const int durationNormalMs = 300;
+  static const int durationSlowMs = 500;
+
+  // Network Settings
+  static const int connectionTimeoutMs = 15000;
+  static const int receiveTimeoutMs = 15000;
+
+  // Storage Keys
+  static const String keyUserToken = 'user_token';
+  static const String keyUserPreferences = 'user_prefs';
+  static const String keyIsFirstRun = 'is_first_run';
+
+  // Responsive Breakpoints
+  static const double breakpointMobile = 600.0;
+  static const double breakpointTablet = 960.0;
+}

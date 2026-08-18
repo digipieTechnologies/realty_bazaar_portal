@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425141087005",
+    "project_id": "brokerhive-portal",
+    "storage_bucket": "brokerhive-portal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425141087005:android:3a53e4bb79fc68c189cff4",
+        "android_client_info": {
+          "package_name": "com.brokerhive.portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4-5cbFGQpl0ytNEuRWTdzo3Ix75BbAM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
