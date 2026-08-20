@@ -1,5 +1,5 @@
-name: brokerhive_portal
-description: "BrokerHive Portal - Public Services and OAuth Integration."
+name: the_realty_bazaar_portal
+description: "The Realty Bazaar - Public Services and OAuth Integration."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -23,6 +23,7 @@ dependencies:
   equatable: ^2.0.5
   url_launcher: ^6.3.2
   intl: ^0.20.2
+  firebase_core: ^4.13.0
 
 dev_dependencies:
   flutter_test:

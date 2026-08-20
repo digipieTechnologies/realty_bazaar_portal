@@ -1,5 +1,5 @@
 // File: lib/modules/splash/screens/splash_screen.dart
-// Purpose: Minimalist, elegant splash screen for Brokerflow Portal home screen.
+// Purpose: Minimalist, elegant splash screen for The Realty Bazaar.
 
 import 'package:flutter/material.dart';
 import '../../../app/app_colors.dart';
@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
             const AppLogo(size: 80.0),
             const SizedBox(height: 16.0),
             Text(
-              'BrokerHive Portal',
+              'The Realty Bazaar',
               style: AppTextStyles.heading1.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,

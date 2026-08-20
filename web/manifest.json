@@ -1,11 +1,11 @@
 {
-    "name": "BrokerHive Portal",
-    "short_name": "BrokerHive Portal",
+    "name": "The Realty Bazaar",
+    "short_name": "The Realty Bazaar",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "The Realty Bazaar - Public Services & Social Integration.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,21 +1,59 @@
 {
   "project_info": {
-    "project_number": "425141087005",
-    "project_id": "brokerhive-portal",
-    "storage_bucket": "brokerhive-portal.firebasestorage.app"
+    "project_number": "872541492683",
+    "project_id": "the-realty-bazaar",
+    "storage_bucket": "the-realty-bazaar.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:425141087005:android:3a53e4bb79fc68c189cff4",
+        "mobilesdk_app_id": "1:872541492683:android:d4e062e8b189687d00924e",
         "android_client_info": {
-          "package_name": "com.brokerhive.portal"
+          "package_name": "com.therealtybazaar.broker"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD4-5cbFGQpl0ytNEuRWTdzo3Ix75BbAM0"
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872541492683:android:0e91474c75291ee100924e",
+        "android_client_info": {
+          "package_name": "com.therealtybazaar.marketing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872541492683:android:e7e504035c5206e900924e",
+        "android_client_info": {
+          "package_name": "com.therealtybazaar.portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
         }
       ],
       "services": {

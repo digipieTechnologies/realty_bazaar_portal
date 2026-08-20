@@ -1,5 +1,5 @@
 // File: lib/main.dart
-// Purpose: Application entry point, service initialization, and routing setup for brokerflowform.
+// Purpose: Application entry point, service initialization, and routing setup for The Realty Bazaar.
 
 // ignore_for_file: deprecated_member_use
 
@@ -10,7 +10,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
-
 import 'app/app_routes.dart';
 import 'app/app_theme.dart';
 import 'app/app_strings.dart';

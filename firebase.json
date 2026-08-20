@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "brokerhive-portal-dev",
+    "site": "the-realty-bazaar-portal",
     "public": "build/web",
     "ignore": [
       "firebase.json",

@@ -5,11 +5,11 @@ class AppStrings {
   AppStrings._();
 
   // App Level
-  static const String appName = 'BrokerHive';
+  static const String appName = 'The Realty Bazaar';
   static const String appVersion = '1.0.0';
 
   // Splash & Onboarding Placeholder
-  static const String welcome = 'Welcome to BrokerHive';
+  static const String welcome = 'Welcome to The Realty Bazaar';
   static const String loadingConfig =
       'Initializing configuration and services...';
 
@@ -36,7 +36,7 @@ class AppStrings {
   static const String errorTimeout = 'Request timed out. Please try again.';
 
   // Placeholder Screens
-  static const String dashboardTitle = 'BrokerHive Portal';
+  static const String dashboardTitle = 'The Realty Bazaar';
   static const String dashboardSubtitle =
       'Your reusable CRM architecture components';
 }

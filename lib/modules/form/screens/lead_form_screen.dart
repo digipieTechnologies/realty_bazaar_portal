@@ -146,7 +146,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   // Powered By Footer
                   Center(
                     child: Text(
-                      'Powered by BrokerHive',
+                      'Powered by The Realty Bazaar',
                       style: AppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textMuted,
@@ -284,7 +284,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 const Text(
-                  'BrokerHive Connect',
+                  'The Realty Bazaar Connect',
                   style: AppTextStyles.heading2,
                 ),
                 const SizedBox(height: 8.0),

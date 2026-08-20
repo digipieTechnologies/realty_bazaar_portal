@@ -10,7 +10,7 @@ import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../widgets/brand/app_logo.dart';
 
-const String _dashboardUrl = 'https://brokerhive-app-v1.web.app/dashboard';
+const String _dashboardUrl = 'https://the-realty-bazaar-portal.web.app/dashboard';
 
 class SocialConnectionSuccessScreen extends StatefulWidget {
   final String platform;
@@ -139,7 +139,7 @@ class _SocialConnectionSuccessScreenState
                         const AppLogo(size: 56.0),
                         const SizedBox(height: 12.0),
                         Text(
-                          'BrokerHive',
+                          'The Realty Bazaar',
                           style: AppTextStyles.heading2.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -274,7 +274,7 @@ class _SocialConnectionSuccessScreenState
           children: [
             TextSpan(
               text:
-                  'Your $platformDisplay account has been linked to BrokerHive. Redirecting back to the app in $_secondsRemaining seconds. ',
+                  'Your $platformDisplay account has been linked to The Realty Bazaar. Redirecting back to the app in $_secondsRemaining seconds. ',
             ),
             TextSpan(
               text: 'Click here',

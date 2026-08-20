@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = brokerhive_portal
+PRODUCT_NAME = The Realty Bazaar
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.brokerhive.portal
+PRODUCT_BUNDLE_IDENTIFIER = com.therealtybazaar.portal
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.brokerhive. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.therealtybazaarportal. All rights reserved.
