@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class WhatsappIconWidget extends StatelessWidget {
   final double size;
+  final Color? color;
 
   const WhatsappIconWidget({
     super.key,
     this.size = 20.0,
+    this.color,
   });
 
   @override
@@ -17,6 +19,7 @@ class WhatsappIconWidget extends StatelessWidget {
       'assets/icons/whatsapp.png',
       width: size,
       height: size,
+      color: color,
       fit: BoxFit.contain,
     );
   }

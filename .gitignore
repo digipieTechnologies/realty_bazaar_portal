@@ -1,5 +1,9 @@
 # Sensitive Configuration & API Keys
 config.json
+.env
+.env.*
+.env.dev
+.env.prod
 
 # Miscellaneous & System
 .DS_Store
