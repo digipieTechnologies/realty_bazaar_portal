@@ -1,18 +1,12 @@
 // File: lib/modules/auth/screens/social_connection_success_screen.dart
-// Purpose: Clean, modern result screen displayed after Facebook/Instagram OAuth flow
-// with auto-redirect to main app dashboard.
+// Purpose: Clean, modern result screen displayed after Facebook/Instagram OAuth flow.
 
-import 'dart:async';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../widgets/brand/app_logo.dart';
 
-const String _dashboardUrl = 'https://the-realty-bazaar-portal.web.app/dashboard';
-
-class SocialConnectionSuccessScreen extends StatefulWidget {
+class SocialConnectionSuccessScreen extends StatelessWidget {
   final String platform;
   final bool isConnected;
   final String? errorMessage;
@@ -25,57 +19,8 @@ class SocialConnectionSuccessScreen extends StatefulWidget {
   });
 
   @override
-  State<SocialConnectionSuccessScreen> createState() =>
-      _SocialConnectionSuccessScreenState();
-}
-
-class _SocialConnectionSuccessScreenState
-    extends State<SocialConnectionSuccessScreen> {
-  Timer? _timer;
-  int _secondsRemaining = 3;
-  bool _hasRedirected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.isConnected) {
-      _startRedirectTimer();
-    }
-  }
-
-  void _startRedirectTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaining > 1) {
-        if (mounted) {
-          setState(() {
-            _secondsRemaining--;
-          });
-        }
-      } else {
-        _timer?.cancel();
-        _redirectToDashboard();
-      }
-    });
-  }
-
-  Future<void> _redirectToDashboard() async {
-    if (_hasRedirected) return;
-    _hasRedirected = true;
-    final uri = Uri.parse(_dashboardUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, webOnlyWindowName: '_self');
-    }
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isFB = widget.platform.toLowerCase() == 'facebook';
+    final isFB = platform.toLowerCase() == 'facebook';
     final platformDisplay = isFB ? 'Facebook' : 'Instagram';
     final platformIcon = isFB
         ? 'assets/icons/facebook.png'
@@ -123,7 +68,7 @@ class _SocialConnectionSuccessScreenState
                         topRight: Radius.circular(24.0),
                       ),
                       gradient: LinearGradient(
-                        colors: widget.isConnected
+                        colors: isConnected
                             ? [AppColors.primary, AppColors.secondary]
                             : [AppColors.error, AppColors.warning],
                       ),
@@ -183,7 +128,7 @@ class _SocialConnectionSuccessScreenState
                               ),
                               const SizedBox(width: 10.0),
                               Text(
-                                widget.isConnected
+                                isConnected
                                     ? '$platformDisplay Connected Successfully'
                                     : '$platformDisplay Connection Failed',
                                 maxLines: 1,
@@ -199,8 +144,18 @@ class _SocialConnectionSuccessScreenState
 
                         const SizedBox(height: 16.0),
 
-                        // ─── 3. Description with inline "click here" link ───
-                        _buildDescriptionText(platformDisplay),
+                        // ─── 3. Description text ───
+                        Text(
+                          isConnected
+                              ? 'Your $platformDisplay account has been linked to The Realty Bazaar successfully.'
+                              : (errorMessage ??
+                                  'We were unable to connect your $platformDisplay account. Please try again from the app.'),
+                          style: AppTextStyles.body2.copyWith(
+                            color: AppColors.textSecondary,
+                            height: 1.65,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
 
                         const SizedBox(height: 24.0),
 
@@ -224,7 +179,7 @@ class _SocialConnectionSuccessScreenState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.info_outline_rounded,
                               size: 15.0,
                               color: AppColors.textMuted,
@@ -251,50 +206,5 @@ class _SocialConnectionSuccessScreenState
         ),
       ),
     );
-  }
-
-  Widget _buildDescriptionText(String platformDisplay) {
-    final baseStyle = AppTextStyles.body2.copyWith(
-      color: AppColors.textSecondary,
-      height: 1.65,
-    );
-
-    final linkStyle = baseStyle.copyWith(
-      color: AppColors.primary,
-      fontWeight: FontWeight.w600,
-      decoration: TextDecoration.underline,
-      decorationColor: AppColors.primary,
-    );
-
-    if (widget.isConnected) {
-      return RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: baseStyle,
-          children: [
-            TextSpan(
-              text:
-                  'Your $platformDisplay account has been linked to The Realty Bazaar. Redirecting back to the app in $_secondsRemaining seconds. ',
-            ),
-            TextSpan(
-              text: 'Click here',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()
-                ..onTap = _redirectToDashboard,
-            ),
-            const TextSpan(
-              text: ' to return now.',
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Text(
-        widget.errorMessage ??
-            'We were unable to connect your $platformDisplay account. Please try again from the app.',
-        style: baseStyle,
-        textAlign: TextAlign.center,
-      );
-    }
   }
 }

@@ -59,6 +59,11 @@ class AppColors {
   static const Color info = Color(0xFF3B82F6); // Blue 500
   static const Color infoLight = Color(0xFFEFF6FF); // Blue 50
 
+  // Brand Social Colors
+  static const Color whatsapp = Color(0xFF25D366);
+  static const Color whatsappDark = Color(0xFF1EBE5D);
+  static const Color facebook = Color(0xFF1877F2);
+
   // Shimmer Effects
   static const Color shimmerBase = Color(0xFFE2E8F0); // Slate 200
   static const Color shimmerHighlight = Color(0xFFF1F5F9); // Slate 100

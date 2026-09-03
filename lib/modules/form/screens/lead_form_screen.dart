@@ -12,6 +12,7 @@ import '../../../widgets/toast/app_toast.dart';
 import '../../../providers/form/form_provider.dart';
 import '../../../models/social_post_model.dart';
 import '../../../models/social_enums.dart';
+import '../../../widgets/brand/app_logo.dart';
 
 class LeadFormScreen extends StatefulWidget {
   final String? postId;
@@ -201,15 +202,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary.withValues(alpha: 0.8)),
                 ),
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Image.asset(
-                  'assets/logo/app_logo.png',
-                  width: 56.0,
-                  height: 56.0,
-                  fit: BoxFit.contain,
-                ),
-              ),
+              const AppLogo(size: 80.0, iconSize: 56.0),
             ],
           ),
           const SizedBox(height: 24.0),
@@ -273,15 +266,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
           Center(
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: Image.asset(
-                    'assets/logo/app_logo.png',
-                    width: 64.0,
-                    height: 64.0,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                const AppLogo(size: 64.0, iconSize: 48.0),
                 const SizedBox(height: 16.0),
                 const Text(
                   'The Realty Bazaar Connect',
