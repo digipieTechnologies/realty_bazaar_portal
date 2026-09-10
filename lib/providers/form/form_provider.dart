@@ -1,62 +1,66 @@
 // File: lib/providers/form/form_provider.dart
-// Purpose: Handles post loading by Meta post_id and lead form submission logic.
+// Purpose: Handles property details loading via get_property_details RPC and lead form submission logic.
 
 import 'package:flutter/material.dart';
 
 import '../../core/supabase/supabase_config.dart';
-import '../../models/social_post_model.dart';
+import '../../models/property_model.dart';
 
 class FormProvider extends ChangeNotifier {
-  SocialPostModel? _post;
-  bool _isLoadingPost = false;
-  bool? _isPostValid; // null = unchecked, true = valid, false = invalid
+  PropertyModel? _property;
+  bool _isLoadingProperty = false;
+  bool? _isPropertyValid; // null = unchecked, true = valid, false = invalid
   bool _isSavingLead = false;
   bool _isSubmitted = false;
   String? _errorMessage;
 
-  SocialPostModel? get post => _post;
-  bool get isLoadingPost => _isLoadingPost;
-  bool? get isPostValid => _isPostValid;
+  PropertyModel? get property => _property;
+  bool get isLoadingProperty => _isLoadingProperty;
+  bool? get isPropertyValid => _isPropertyValid;
   bool get isSavingLead => _isSavingLead;
   bool get isSubmitted => _isSubmitted;
   String? get errorMessage => _errorMessage;
 
-  /// Fetches a social post by its Meta post_id (e.g. 475656465456) in the database
-  /// Includes related property and address information
-  Future<void> fetchPostDetails(String postId) async {
-    _isLoadingPost = true;
+  // Backward compatibility getters
+  bool get isLoadingPost => _isLoadingProperty;
+  bool? get isPostValid => _isPropertyValid;
+
+  /// Fetches property details by calling only the `get_property_details` RPC function
+  Future<void> fetchPropertyDetails(String identifier) async {
+    _isLoadingProperty = true;
     _errorMessage = null;
-    _post = null;
-    _isPostValid = null;
+    _property = null;
+    _isPropertyValid = null;
     notifyListeners();
 
     try {
-      final response =
-          await SupabaseConfig.client
-              .from('social_posts')
-              .select('*, properties(*, addresses(*))')
-              .eq('post_id', postId)
-              .maybeSingle();
+      final res = await SupabaseConfig.client.rpc(
+        'get_property_details',
+        params: {'p_identifier': identifier},
+      );
 
-      if (response != null) {
-        _post = SocialPostModel.fromJson(response);
-        _isPostValid = true;
+      if (res != null && res is Map && res['success'] == true && res['data'] != null) {
+        _property = PropertyModel.fromJson(res['data']);
+        _isPropertyValid = true;
       } else {
-        _isPostValid = false;
-        _errorMessage = 'Listing not found.';
+        _isPropertyValid = false;
+        _errorMessage = res is Map ? res['message']?.toString() ?? 'Property not found.' : 'Property not found.';
       }
     } catch (e) {
-      debugPrint('Database query failed: $e');
-      _isPostValid = false;
-      _errorMessage = 'Failed to fetch details: $e';
+      debugPrint('Error calling get_property_details RPC: $e');
+      _isPropertyValid = false;
+      _errorMessage = 'Failed to fetch property details: $e';
     } finally {
-      _isLoadingPost = false;
+      _isLoadingProperty = false;
       notifyListeners();
     }
   }
 
+  /// Backward compatibility wrapper for fetchPostDetails
+  Future<void> fetchPostDetails(String identifier) => fetchPropertyDetails(identifier);
+
   /// Submits the lead form data to the social_leads table in Supabase.
-  /// Stores broker_id from the social post record if present.
+  /// Stores property_id and broker_id directly in social_leads.
   Future<bool> submitLead({
     required String userName,
     required String phone,
@@ -64,7 +68,8 @@ class FormProvider extends ChangeNotifier {
     String phoneCountryIso = 'IN',
     String? address,
     String? notes,
-    String? socialPostId, // This is the database UUID (social_posts.id)
+    String? propertyId,
+    String? brokerId,
   }) async {
     _isSavingLead = true;
     _errorMessage = null;
@@ -80,19 +85,18 @@ class FormProvider extends ChangeNotifier {
     }
 
     try {
+      final String? targetPropertyId = propertyId ?? _property?.id;
+      final String? targetBrokerId = brokerId ?? _property?.brokerId?.id;
+
       final Map<String, dynamic> leadPayload = {
         'user_name': userName,
         'phone': phone,
         'phone_country_code': phoneCountryCode,
         'phone_country_iso': phoneCountryIso,
         'notes': finalNotes,
-        'social_post_id': socialPostId,
+        if (targetPropertyId != null && targetPropertyId.isNotEmpty) 'property_id': targetPropertyId,
+        if (targetBrokerId != null && targetBrokerId.isNotEmpty) 'broker_id': targetBrokerId,
       };
-
-      // If broker_id is present on the fetched social post, store it in social_leads
-      if (_post?.brokerId?.id != null && _post!.brokerId!.id!.isNotEmpty) {
-        leadPayload['broker_id'] = _post!.brokerId!.id;
-      }
 
       await SupabaseConfig.client.from('social_leads').insert(leadPayload);
       _isSubmitted = true;

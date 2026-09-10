@@ -40,6 +40,11 @@ class AppLogo extends StatelessWidget {
         width: effectiveIconSize,
         height: effectiveIconSize,
         fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => Icon(
+          Icons.home_work_rounded,
+          color: iconColor ?? AppColors.primary,
+          size: effectiveIconSize * 0.8,
+        ),
       ),
     );
   }
