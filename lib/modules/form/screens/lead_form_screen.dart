@@ -10,8 +10,8 @@ import '../../../widgets/images/cached_image.dart';
 import '../../../widgets/loaders/app_loader.dart';
 import '../../../widgets/toast/app_toast.dart';
 import '../../../providers/form/form_provider.dart';
-import '../../../models/social_post_model.dart';
-import '../../../models/social_enums.dart';
+import '../../../models/property_model.dart';
+import '../../../models/property_enums.dart';
 import '../../../widgets/brand/app_logo.dart';
 
 class LeadFormScreen extends StatefulWidget {
@@ -91,7 +91,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
       phoneCountryCode: '91',
       phoneCountryIso: 'IN',
       notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
-      socialPostId: provider.post?.id,
+      propertyId: provider.property?.id,
+      brokerId: provider.property?.brokerId?.id,
     );
 
     if (success && mounted) {
@@ -255,7 +256,7 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
   }
 
   Widget _buildFormState(FormProvider provider) {
-    final post = provider.post!;
+    final property = provider.property!;
 
     return Form(
       key: _formKey,
@@ -285,8 +286,8 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
           const Divider(color: AppColors.divider, height: 1.0),
           const SizedBox(height: 24.0),
 
-          // Linked Post Preview
-          _buildPostPreviewCard(post),
+          // Linked Property Preview
+          _buildPropertyPreviewCard(property),
           const SizedBox(height: 24.0),
 
           // Name Field
@@ -425,115 +426,193 @@ class _LeadFormScreenState extends State<LeadFormScreen> {
     );
   }
 
-  Widget _buildPostPreviewCard(SocialPostModel post) {
-    final hasImage = post.mediaUrls != null && post.mediaUrls!.isNotEmpty;
-    final firstMedia = hasImage ? post.mediaUrls!.first : null;
-    final isFB = post.platform == SocialPlatform.facebook || post.platform?.name == 'facebook';
+  Widget _buildPropertyPreviewCard(PropertyModel property) {
+    final mediaUrl = property.coverImageUrl;
+    final addressObj = property.address;
+    final locationText = addressObj?.fullAddress.trim().isNotEmpty == true
+        ? addressObj!.fullAddress.trim()
+        : (addressObj?.city?.trim().isNotEmpty == true
+            ? '${addressObj!.city}${addressObj.state?.isNotEmpty == true ? ", ${addressObj.state}" : ""}'
+            : null);
 
-    // Display property location (full address) if property is present, otherwise fallback to reel caption
-    final addressObj = post.property?.address;
-    final fullAddressStr = addressObj?.fullAddress.trim();
-    final cityStr = addressObj?.city?.trim();
-    
-    String? propertyLocationText;
-    if (fullAddressStr != null && fullAddressStr.isNotEmpty) {
-      propertyLocationText = fullAddressStr;
-    } else if (cityStr != null && cityStr.isNotEmpty) {
-      propertyLocationText = cityStr;
-    } else if (post.property?.propertyTitle != null && post.property!.propertyTitle.trim().isNotEmpty) {
-      propertyLocationText = post.property!.propertyTitle.trim();
-    }
+    final brokerName = property.broker?.businessName?.trim();
 
-    final displayText = propertyLocationText ??
-        (post.caption != null && post.caption!.isNotEmpty
-            ? post.caption!
-            : 'Video or image update without description.');
-
-    String? mediaUrl;
-    if (firstMedia != null) {
-      if (firstMedia is Map) {
-        mediaUrl = firstMedia['thumbnail']?.toString() ??
-            firstMedia['thumbnail_url']?.toString() ??
-            firstMedia['url']?.toString() ??
-            firstMedia['media_url']?.toString();
-      } else {
-        mediaUrl = firstMedia.toString();
-      }
-    }
+    final List<String> specs = [];
+    if (property.bedrooms > 0) specs.add('${property.bedrooms} Bed');
+    if (property.bathrooms > 0) specs.add('${property.bathrooms} Bath');
+    if (property.area > 0) specs.add('${property.area.toStringAsFixed(0)} ${property.areaUnit.displayName}');
+    if (property.furnishingStatus != FurnishingStatus.unknown) specs.add(property.furnishingStatus.displayName);
 
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: AppColors.border, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.04),
+            blurRadius: 10.0,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Post Thumbnail
-          if (mediaUrl != null && mediaUrl.isNotEmpty)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: SizedBox(
-                width: 52.0,
-                height: 52.0,
-                child: CachedImage(
-                  mediaUrl,
-                  fit: BoxFit.cover,
+          // Left Media Thumbnail with Overlay Badge
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: SizedBox(
+                  width: 84.0,
+                  height: 84.0,
+                  child: mediaUrl != null && mediaUrl.isNotEmpty
+                      ? CachedImage(
+                          mediaUrl,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          color: AppColors.primaryLight,
+                          child: const Icon(
+                            Icons.home_work_rounded,
+                            color: AppColors.primary,
+                            size: 36.0,
+                          ),
+                        ),
                 ),
               ),
-            )
-          else
-            Container(
-              width: 52.0,
-              height: 52.0,
-              decoration: BoxDecoration(
-                color: AppColors.divider,
-                borderRadius: BorderRadius.circular(8.0),
+              // Listing Type Badge Pill
+              Positioned(
+                bottom: 4.0,
+                left: 4.0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                  decoration: BoxDecoration(
+                    color: property.listingType.isRent
+                        ? AppColors.secondary
+                        : AppColors.primary,
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  child: Text(
+                    property.listingType.displayName,
+                    style: AppTextStyles.caption.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 9.5,
+                    ),
+                  ),
+                ),
               ),
-              child: Icon(
-                isFB ? Icons.facebook_rounded : Icons.camera_alt_outlined,
-                color: isFB ? const Color(0xFF1877F2) : const Color(0xFFE1306C),
-              ),
-            ),
-          const SizedBox(width: 12.0),
-          // Post Details
+            ],
+          ),
+          const SizedBox(width: 14.0),
+
+          // Right Minimal Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
+                // Header: Title & Property Code
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      propertyLocationText != null
-                          ? Icons.location_on_rounded
-                          : (isFB ? Icons.facebook_rounded : Icons.camera_alt_outlined),
-                      size: 14.0,
-                      color: isFB ? const Color(0xFF1877F2) : const Color(0xFFE1306C),
-                    ),
-                    const SizedBox(width: 4.0),
-                    Text(
-                      propertyLocationText != null
-                          ? 'Property Location'
-                          : (isFB ? 'Linked Facebook Post' : 'Linked Instagram Media'),
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isFB ? const Color(0xFF1877F2) : const Color(0xFFE1306C),
+                    Expanded(
+                      child: Text(
+                        property.propertyTitle.isNotEmpty ? property.propertyTitle : 'Property Details',
+                        style: AppTextStyles.subtitle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                          fontSize: 13.5,
+                          height: 1.25,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (property.propertyCode != null && property.propertyCode!.trim().isNotEmpty) ...[
+                      const SizedBox(width: 6.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 3.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceLight,
+                          borderRadius: BorderRadius.circular(6.0),
+                          border: Border.all(color: AppColors.border, width: 0.8),
+                        ),
+                        child: Text(
+                          '#${property.propertyCode!.trim()}',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10.5,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-                const SizedBox(height: 4.0),
-                Text(
-                  displayText,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: 12.0,
-                    fontWeight: propertyLocationText != null ? FontWeight.w600 : FontWeight.normal,
+
+                // Location
+                if (locationText != null) ...[
+                  const SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_rounded, size: 13.0, color: AppColors.secondary),
+                      const SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          locationText,
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ],
+
+                // Minimal Key Specs (No Price!)
+                if (specs.isNotEmpty) ...[
+                  const SizedBox(height: 5.0),
+                  Text(
+                    specs.join(' • '),
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11.5,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+
+                // Verified Broker
+                if (brokerName != null && brokerName.isNotEmpty) ...[
+                  const SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.verified_rounded, size: 12.0, color: AppColors.success),
+                      const SizedBox(width: 4.0),
+                      Expanded(
+                        child: Text(
+                          'By $brokerName',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.success,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
